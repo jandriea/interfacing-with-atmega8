@@ -29,5 +29,6 @@ uint16_t adc_read(uint8_t ch) {
 
 /* Read temperature in Celcius Degree */
 uint16_t read_tmp(void){
-  return (adc_read(0) / 2) ;
+  uint16_t temp = adc_read(0) / 4;
+  return (temp) ;
 }

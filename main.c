@@ -28,7 +28,7 @@ ISR(TIMER1_OVF_vect) {
 int main(void){
 
   /* Local variable */
-  uint8_t key, i;
+  uint8_t key, i, adc_delay = 0;
   uint16_t ReceivedByte, red_delay = (uint8_t)1u, keypad_delay = (uint8_t)1u;
   rtc_t rtc;
 
@@ -104,6 +104,14 @@ int main(void){
     if (timer1_ovf_flag >= (uint8_t)10u) {
       /* LED display */
       red_light_district(red_delay);
+
+      if (adc_delay >= 2) {
+        adc_delay = 0u;
+        lmTemp = read_tmp();
+      }
+      else {
+        adc_delay++;
+      }
 
       if(red_delay >= (uint16_t)10u) {
         rtc_getDateTime(&rtc);
