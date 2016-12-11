@@ -1,6 +1,9 @@
 #ifndef LED_HANDLER_H
 #define LED_HANDLER_H
 
+#define ON ((uint8_t)1u)
+#define OFF ((uint8_t)0u)
+
 void red_led_status(uint8_t stat);
 void blue_led_status(uint8_t stat);
 void yellow_led_status(uint8_t stat);

@@ -3,7 +3,7 @@
 #include "led_handler.h"
 
 void red_led_status(uint8_t stat) {
-  if (stat == (uint8_t)1u) {
+  if (stat == ON) {
     asm("SBI 0x18,6");
   } else {
     asm("CBI 0x18,6");
@@ -11,7 +11,7 @@ void red_led_status(uint8_t stat) {
 }
 
 void blue_led_status(uint8_t stat) {
-  if (stat == (uint8_t)1u) {
+  if (stat == ON) {
     asm("SBI 0x18,7");
   } else {
     asm("CBI 0x18,7");
@@ -19,7 +19,7 @@ void blue_led_status(uint8_t stat) {
 }
 
 void yellow_led_status(uint8_t stat) {
-  if (stat == (uint8_t)1u) {
+  if (stat == ON) {
     asm("SBI 0x15,3");
   } else {
     asm("CBI 0x15,3");
@@ -27,7 +27,7 @@ void yellow_led_status(uint8_t stat) {
 }
 
 void green_led_status(uint8_t stat) {
-  if (stat == (uint8_t)1u) {
+  if (stat == ON) {
     asm("SBI 0x15,6");
   } else {
     asm("CBI 0x15,6");
@@ -36,16 +36,16 @@ void green_led_status(uint8_t stat) {
 
 void red_light_district(uint16_t waitDelay) {
   if (waitDelay == (uint16_t)1u) {
-    red_led_status(1u);
+    red_led_status(ON);
   }
   else if (waitDelay == (uint16_t)2u) {
-    red_led_status(0u);
+    red_led_status(OFF);
   }
   else if (waitDelay == (uint16_t)3u) {
-    red_led_status(1u);
+    red_led_status(ON);
   }
   else if (waitDelay == (uint16_t)4u) {
-    red_led_status(0u);
+    red_led_status(OFF);
   }
   else {
 
@@ -54,9 +54,9 @@ void red_light_district(uint16_t waitDelay) {
 
 void blue_light_display(uint8_t st, uint8_t lm) {
   if (lm >= st) {
-    blue_led_status(1);
+    blue_led_status(ON);
   }
   else {
-    blue_led_status(0);
+    blue_led_status(OFF);
   }
 }

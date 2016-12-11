@@ -12,6 +12,8 @@
 #include "uart_handler.h"
 #include "app.h"
 
+#define RTO_TIMEOUT (100u)
+
 /* Global Variable */
 volatile uint8_t timer1_ovf_flag = (uint8_t)0u;
 uint8_t serialData[30], rtc_data[25];
@@ -19,7 +21,7 @@ uint8_t serialData[30], rtc_data[25];
 /* Timer 1 interrupt */
 ISR(TIMER1_OVF_vect) {
   /* Reset TCNT1 value */
-  TCNT1 = 0xFFD9;
+  TCNT1 = 0xFE79;
 
   /* Set overflow flag */
   timer1_ovf_flag++;
@@ -29,7 +31,7 @@ int main(void){
 
   /* Local variable */
   uint8_t key, i, adc_delay = 0;
-  uint16_t ReceivedByte, red_delay = (uint8_t)1u, keypad_delay = (uint8_t)1u;
+  uint16_t ReceivedByte, red_delay = (uint8_t)1u, keypad_delay = (uint8_t)1u, rtoCounter = (uint16_t)0u;
   rtc_t rtc;
 
   /* Initiate global variable */
@@ -47,7 +49,7 @@ int main(void){
   /* - OVF occur every 10 ms */
   TCCR1B = (1 << CS12)|(1 << CS10);
   TIMSK = (1 << TOIE1);
-  TCNT1 = 0xFFD9;
+  TCNT1 = 0xFE79;
 
   /* LCD init without Cursor */
   lcd_init(LCD_DISPLAYMODE_ON);
@@ -76,8 +78,10 @@ int main(void){
     ReceivedByte = uart_receive();
     _delay_ms(1);
     if(ReceivedByte == '<') {
-      yellow_led_status(1u);
+      /* Activate Yellow LED */
+      yellow_led_status(ON);
       serialData[0] = ReceivedByte;
+      /* Receive data and put it into buffer */
       i = (uint8_t)1u;
       while (ReceivedByte != '>') {
         ReceivedByte = uart_receive();
@@ -87,24 +91,40 @@ int main(void){
           serialData[i] = ReceivedByte;
           i++;
         }
+
+        rtoCounter++;
+        /* if RTO timeout occur */
+        if(rtoCounter > RTO_TIMEOUT) {
+          break;
+        }
       }
-      serialData[i+1] = '>';
-      yellow_led_status(0u);
-      green_led_status(1u);
-      give_me_some_reply(serialData, &rtc);
-      green_led_status(0u);
+      /* Turn off Yellow LED */
+      yellow_led_status(OFF);
+      /*Turn on green LED*/
+      green_led_status(ON);
+      /* Check RTO counter */
+      if(rtoCounter <= RTO_TIMEOUT) {
+        serialData[i+1] = '>';
+        give_me_some_reply(serialData, &rtc);
+      }
+      /* Turn off green LED */
+      green_led_status(OFF);
+      /* reset rto counter value */
+      rtoCounter = (uint16_t)0u;
     }
 
+    /* Keypad handler */
     key = keypad_GetKey(keypad_delay);
-
     if (key != 'Z') {
       pressed_key = key;
     }
 
-    if (timer1_ovf_flag >= (uint8_t)10u) {
+    /* Timer overflow */
+    if (timer1_ovf_flag >= (uint8_t)1u) {
       /* LED display */
       red_light_district(red_delay);
 
+      /* update ADC every 200ms */
       if (adc_delay >= 2) {
         adc_delay = 0u;
         lmTemp = read_tmp();
@@ -114,6 +134,7 @@ int main(void){
       }
 
       if(red_delay >= (uint16_t)10u) {
+        /* update every 1 sec */
         rtc_getDateTime(&rtc);
         red_delay = (uint16_t)1u;
         lcd_disp(&rtc, pressed_key, setTemp, lmTemp);

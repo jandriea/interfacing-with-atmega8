@@ -49,6 +49,7 @@ void lcd_disp(rtc_t *rtc, uint8_t key, uint8_t st_tmp, uint8_t lm_tmp) {
   lcd_putc(buff[21]);
   lcd_putc(buff[22]);
 
+  /* Limit temperature */
   lcd_goto(0x4A);
   if(st_tmp < 10) {
     lcd_putc('0');
@@ -56,6 +57,7 @@ void lcd_disp(rtc_t *rtc, uint8_t key, uint8_t st_tmp, uint8_t lm_tmp) {
   itoa(st_tmp, buff_st, 10);
   lcd_puts(buff_st);
 
+  /* LM35 temperature */
   lcd_goto(0x4E);
   if(lm_tmp < 10) {
     lcd_putc('0');
