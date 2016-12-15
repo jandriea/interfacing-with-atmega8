@@ -21,7 +21,7 @@ uint8_t serialData[30], rtc_data[25];
 /* Timer 1 interrupt */
 ISR(TIMER1_OVF_vect) {
   /* Reset TCNT1 value */
-  TCNT1 = 0xFE79;
+  TCNT1 = 0xFCF3;
 
   /* Set overflow flag */
   timer1_ovf_flag++;
@@ -49,7 +49,7 @@ int main(void){
   /* - OVF occur every 10 ms */
   TCCR1B = (1 << CS12)|(1 << CS10);
   TIMSK = (1 << TOIE1);
-  TCNT1 = 0xFE79;
+  TCNT1 = 0xFCF3;
 
   /* LCD init without Cursor */
   lcd_init(LCD_DISPLAYMODE_ON);

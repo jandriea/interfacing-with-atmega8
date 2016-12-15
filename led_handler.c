@@ -38,13 +38,7 @@ void red_light_district(uint16_t waitDelay) {
   if (waitDelay == (uint16_t)1u) {
     red_led_status(ON);
   }
-  else if (waitDelay == (uint16_t)2u) {
-    red_led_status(OFF);
-  }
   else if (waitDelay == (uint16_t)3u) {
-    red_led_status(ON);
-  }
-  else if (waitDelay == (uint16_t)4u) {
     red_led_status(OFF);
   }
   else {
