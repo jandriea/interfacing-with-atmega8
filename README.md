@@ -4,12 +4,12 @@ ATMEGA8 with UART, Keypad, RTC, LM35 and LCD and LEDs
 ##UART
 Baudrate = 9600, parity = none, data = 8 bit
 Serial command:
-- <GT> Get temperature limit, LM35 temperature
-- <STxx> set temperature limit (00 - 99)
-- <GK> Get last pressed keypad
-- <SKx> Set last pressed keypad display
-- <GR> Get RTC value DOW,dd-MM-yyyy,hh:mm:ss
-- <SR,DOW,dd-MM-yyyy,hh:mm:ss> Set RTC value
+- \<GT> Get temperature limit, LM35 temperature
+- \<STxx> set temperature limit (00 - 99)
+- \<GK> Get last pressed keypad
+- \<SKx> Set last pressed keypad display
+- \<GR> Get RTC value DOW,dd-MM-yyyy,hh:mm:ss
+- \<SR,DOW,dd-MM-yyyy,hh:mm:ss> Set RTC value
 
 ##Keypad
 I am using 4x4 keypad from proteus, calculator like keypad
